@@ -1,0 +1,47 @@
+
+/*
+ * 
+ 
+ You will be able to check if a String str is actually an opcode mnemonic using:
+if(opcode.keySet().contains(str))...
+The other operation you need for Maps is "Get"
+int opcode = opcodes.get(str);
+
+ int a = 0x14;
+	String hex = Integer.toHexString(a);
+	System.out.println(hex);
+	System.out.println(Assembler.HexToBinary(hex));
+	
+	
+	
+	/*operations todo
+	machine.add("_010100");
+	for(int i=0; i<operationsTODO.size(); i++)
+	{
+		Entry<String, String> strEntry = operationsTODO.entrySet().iterator().next();
+		String opcode = strEntry.getKey();
+		System.out.println(opcode);
+		int a = opcodes.get(opcode);
+		String hex = Integer.toHexString(a);
+		System.out.println(a);
+		System.out.println(Assembler.HexToBinary(hex));
+	}
+	.
+	
+	
+	
+	
+	
+	for( Iterator<Entry<String, String>> iter = operationsTODO.entrySet().iterator(); iter.hasNext();)
+	{
+		Entry<String,String> strEntry = iter.next();
+		String opcode = strEntry.getKey();
+		String operand = strEntry.getValue();
+		
+		System.out.println(opcode);
+		int a = opcodes.get(opcode);
+		String hex = Integer.toHexString(a);
+		System.out.println(Assembler.HexToBinary(hex));
+	}
+	
+	*/

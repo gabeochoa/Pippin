@@ -1,0 +1,281 @@
+package pippin;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
+
+
+public class Assembler {
+
+
+public static Map<String, Integer> opcodes = new HashMap<String, Integer>();
+public static Map<String, Boolean> requiresArgument = new HashMap<String, Boolean>();
+
+static
+{
+	//LOD
+	opcodes.put("LOD", 0x01);
+	requiresArgument.put("LOD", true);
+	//LODI
+	opcodes.put("LODI", 0x02);
+	requiresArgument.put("JUMP", true);
+	//STO
+	opcodes.put("STO", 0x03);
+	requiresArgument.put("STO", true);
+	//JUMP
+	opcodes.put("JUMP", 0x1A);
+	requiresArgument.put("JUMP", true);
+	//JUMPZ
+	opcodes.put("JMPZ", 0x1B);
+	requiresArgument.put("JMPZ", true);
+	//NOP
+	opcodes.put("NOP", 0x00);
+	requiresArgument.put("NOP", true);
+	//HALT
+	opcodes.put("HALT", 0x1F);
+	requiresArgument.put("HALT", true);
+	//ADD
+	opcodes.put("ADD", 0x04);
+	requiresArgument.put("ADD", true);
+	//ADDI
+	opcodes.put("ADDI", 0x08);
+	requiresArgument.put("ADDI", true);
+	//SUB
+	opcodes.put("SUB", 0x05);
+	requiresArgument.put("SUB", true);
+	//SUBI
+	opcodes.put("SUBI", 0x09);
+	requiresArgument.put("SUBI", true);
+	//MUL
+	opcodes.put("MUL", 0x06);
+	requiresArgument.put("MUL", true);
+	//MULI
+	opcodes.put("MULI", 0x0A);
+	requiresArgument.put("MULI", true);
+	//DIV
+	opcodes.put("DIV", 0x07);
+	requiresArgument.put("DIV", true);
+	//DIVI
+	opcodes.put("DIVI", 0x0B);
+	requiresArgument.put("DIVI", true);
+	//AND
+	opcodes.put("AND", 0x10);
+	requiresArgument.put("AND", true);
+	//ANDI
+	opcodes.put("ANDI", 0x11);
+	requiresArgument.put("ANDI", true);
+	//NOT
+	opcodes.put("NOT", 0x12);
+	requiresArgument.put("NOT", true);
+	//CMPZ
+	opcodes.put("CMPZ", 0x13);
+	requiresArgument.put("CMPZ", true);
+	//CMPL
+	opcodes.put("CMPL", 0x14);
+	requiresArgument.put("CMPL", true);
+}
+
+
+private static String[] staticLookup = new String[]
+	    {"0000","0001","0010","0011","0100","0101","0110","0111",
+	     "1000","1001","1010","1011","1100","1101","1110","1111"};
+
+
+public static String HexToBinary(String Hex) {
+	if(Hex.length()<2)
+		Hex = "0"+Hex;
+	
+	char f = Hex.charAt(0);
+	char s = Hex.charAt(1);
+	
+	String fh =  staticLookup[Integer.parseInt(Character.toString(f), 16)].substring(2);
+	String sh =  staticLookup[Integer.parseInt(Character.toString(s), 16)];
+
+	return "_"+fh + sh;
+}
+	
+
+/*
+ * 
+ 
+ You will be able to check if a String str is actually an opcode mnemonic using:
+if(opcode.keySet().contains(str))...
+The other operation you need for Maps is "Get"
+int opcode = opcodes.get(str);
+
+ int a = 0x14;
+	String hex = Integer.toHexString(a);
+	System.out.println(hex);
+	System.out.println(Assembler.HexToBinary(hex));
+	
+	
+	
+	/*operations todo
+	machine.add("_010100");
+	for(int i=0; i<operationsTODO.size(); i++)
+	{
+		Entry<String, String> strEntry = operationsTODO.entrySet().iterator().next();
+		String opcode = strEntry.getKey();
+		System.out.println(opcode);
+		int a = opcodes.get(opcode);
+		String hex = Integer.toHexString(a);
+		System.out.println(a);
+		System.out.println(Assembler.HexToBinary(hex));
+	}
+	.
+	
+	
+	
+	
+	
+	for( Iterator<Entry<String, String>> iter = operationsTODO.entrySet().iterator(); iter.hasNext();)
+	{
+		Entry<String,String> strEntry = iter.next();
+		String opcode = strEntry.getKey();
+		String operand = strEntry.getValue();
+		
+		System.out.println(opcode);
+		int a = opcodes.get(opcode);
+		String hex = Integer.toHexString(a);
+		System.out.println(Assembler.HexToBinary(hex));
+	}
+	
+	*/
+
+public static Map<String, String> operationsTODO = new HashMap<String, String>();
+public static ArrayList<String> orderedOpcodes = new ArrayList<String>();
+
+public static void main(String[] args) throws FileNotFoundException {
+    
+	File file = null;
+	file = getFile("Operations.txt");
+	
+    Scanner input = new Scanner(file);	
+    
+    while(input.hasNextLine()) {
+        
+    	try{
+    	String line = input.nextLine();
+        String[] pieces = line.split("\\s+");
+        
+        String opString = pieces[0];
+        String operand = null;
+        
+        if(!opcodes.keySet().contains(opString))
+        {
+        	System.out.println("Not an opcode  "+opString );
+        }
+        else
+        {
+        	
+        	if(pieces.length > 1)
+            {
+            	operand = pieces[1].toUpperCase().trim();
+            }
+
+        	operationsTODO.put(opString, operand);
+        	orderedOpcodes.add(opString);
+        	//s//System.out.println("OPCODE  "+opString+ "   OPERAND    "+operand);	
+        }
+    	}
+    	catch(Exception e){}
+    }
+    input.close();
+    
+    handleMachineCode();
+    
+    saveFile();
+}
+
+public static ArrayList<String> machine = new ArrayList<String>();
+
+private static void handleMachineCode()
+{
+	System.out.println("");
+	
+	for(String opcode : orderedOpcodes)
+	{
+		String operand = operationsTODO.get(opcode);
+		
+		int a = opcodes.get(opcode);
+		String hex = Integer.toHexString(a);
+		String binary = (Assembler.HexToBinary(hex));
+		System.out.println(binary);
+		machine.add(binary+ " "+operand);
+	}
+}
+
+
+private static void saveFile()
+{
+
+	FileOutputStream outfile;
+    try {
+    	
+    	outfile = new FileOutputStream("MACHINECODE.txt", false);
+        PrintWriter output = new PrintWriter(outfile);
+        
+        for(String str: machine)
+        {
+        	output.println(str);
+        }
+        
+        output.close();
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    }
+}
+
+private static File getFile(String string) {
+	
+	File inFile = null;
+    boolean goodFile = false; 
+    
+    while(!goodFile) {
+    	
+        String inFileName = string;
+        inFile = new File(inFileName);
+        
+        if(!inFile.exists()) {
+            System.out.println("\nThat file does not exist or is in a " +
+                    "different directory");
+            return null;
+        } else {
+            goodFile = true;
+        }
+    }
+    return inFile;
+}
+
+@SuppressWarnings("unused")
+private static File getFileWithInput() {
+	
+	System.out.println("Please give the name of the input file");
+    Scanner kbd = new Scanner(System.in);
+    File inFile = null;
+    boolean goodFile = false; 
+    while(!goodFile) {
+        String inFileName = kbd.nextLine();
+        inFile = new File(inFileName);
+        //SEE THE NOTE ABOUT THE FILE AT THE END OF THE PAGE
+        if(!inFile.exists()) {
+            System.out.println("\nThat file does not exist or is in a " +
+                    "different directory");
+            System.out.println("Please give the name of the input file");
+        } else {
+            goodFile = true;
+        }
+    }
+    return inFile;
+}
+
+
+	
+}
