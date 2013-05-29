@@ -26,7 +26,9 @@ To run:
 
 
 To compile and Run:
-        Download Code and run the Machine.java code, this project was written in Eclipse and should work on 
+       
+        Download Code and run the Machine.java code, 
+        this project was written in Eclipse and should work on 
         any windows/mac/linux version of eclipse. 
 
 Written in:
